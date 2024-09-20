@@ -27,7 +27,7 @@ function App() {
     //   </header>
     // </div>
     <div>
-      <h1>Data from Backend:</h1>
+      <h1 >Data from Backend:</h1>
       <p>{data}</p>
     </div>
   );
