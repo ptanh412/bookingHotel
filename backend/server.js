@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const { connectToDb, sql } = require('./config/dbConfig');  
+const { connectToDb} = require('./config/dbConfig');  
 
 const app = express();
 
@@ -20,9 +20,12 @@ connectToDb();
 //   });
 const roomRoute = require('./routes/roomRoute');
 const userRoute = require('./routes/userRoute');
-
-app.use('/api/users', userRoute);
+const bookingRoute = require('./routes/bookingRoute');
+const paymentRoute = require('./routes/paymentRoute');
+app.use(userRoute);
 app.use('/api/rooms', roomRoute);
+app.use(bookingRoute);
+app.use(paymentRoute);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
