@@ -1,26 +1,18 @@
 import React, { useContext, useState } from 'react';
 import { MdOutlineEmail } from "react-icons/md";
 import { CiLock } from "react-icons/ci";
-import { CiUser } from "react-icons/ci";
-import { FiPhone } from "react-icons/fi";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { AlertContext } from '../../context/AlertMessage';
-import {FaExclamationCircle } from 'react-icons/fa';
+import { FaExclamationCircle } from 'react-icons/fa';
 const Login = () => {
     const [tab, setTab] = useState(0);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [fullName, setFullName] = useState('');
-    const [phoneNumber, setPhoneNumber] = useState('');
-    const {alertMessage, alertType, showAlert } = useContext(AlertContext);
+    const { alertMessage, alertType, showAlert } = useContext(AlertContext);
     const navigate = useNavigate();
     const handleTab = (index) => {
         setTab(index);
-        if (index === 0) {
-            setEmail('');
-            setPassword('');
-        }
     }
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -32,11 +24,12 @@ const Login = () => {
             console.log('Full response:', response);
             if (response) {
                 const user = response.data;
+                localStorage.setItem('user', JSON.stringify(user));
                 console.log('User role:', user.role);
-                if (user.role === 'user') {
+                if (user.role === 'customer') {
                     navigate('/');
                     showAlert('Login successfully', 'success');
-                } else if (user.role === 'admin') {
+                } else if (user.role === 'admin' || user.role === 'staff') {
                     navigate('/admin-home/dashboard');
                     showAlert('Login successfully', 'success');
                 }
@@ -57,13 +50,13 @@ const Login = () => {
         try {
             const response = await axios.post('http://localhost:5000/api/register', {
                 email,
-                fullName,
-                phoneNumber,
                 password
             });
             console.log(response.data);
             if (response.data) {
                 setTab(0);
+                setEmail('');
+                setPassword('');
             }
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -137,31 +130,6 @@ const Login = () => {
                     <form action="" className="p-6">
                         <h1 className="text-3xl font-bold mb-4 text-center">Register</h1>
                         <p className="text-gray-400 text-center">Create a new account to use our services</p>
-                        <div className="flex flex-col space-y-3 my-3">
-                            <label htmlFor="" className="text-xl font-semibold">Full Name</label>
-                            <div className='w-full relative'>
-                                <CiUser className="absolute top-3.5 left-2 h-4 w-4 bottom-0 text-2xl" />
-                                <input
-                                    type="text"
-                                    placeholder="Pham Anh"
-                                    className="border pl-7 py-2 rounded-lg w-full"
-                                    value={fullName}
-                                    onChange={(e) => setFullName(e.target.value)}
-                                />
-                            </div>
-                        </div>
-                        <div className="flex flex-col space-y-3 my-3">
-                            <label htmlFor="" className="text-xl font-semibold">Phone Number</label>
-                            <div className='w-full relative'>
-                                <FiPhone className="absolute top-3.5 left-2 h-4 w-4 bottom-0 text-2xl" />
-                                <input
-                                    type="text"
-                                    className="border pl-7 py-2 rounded-lg w-full"
-                                    value={phoneNumber}
-                                    onChange={(e) => setPhoneNumber(e.target.value)}
-                                />
-                            </div>
-                        </div>
                         <div className="flex flex-col space-y-3 my-3">
                             <label htmlFor="" className="text-xl font-semibold">Email</label>
                             <div className='w-full relative'>

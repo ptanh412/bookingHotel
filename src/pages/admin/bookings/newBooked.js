@@ -48,7 +48,7 @@ const NewBooked = () => {
       if (response.status === 200) {
         alert('Booking confirmed');
         setTimeout(() => {
-          navigate('/admin/bookings/profileBookings');
+          navigate('/admin-home/bookings/profileBookings');
         }, 2000);
       } else {
         alert('Failed to confirm booking');

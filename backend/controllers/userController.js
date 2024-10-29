@@ -11,10 +11,10 @@ const getUsers = async (req, res) =>{
 }
 const postUser = async (req,res) =>{
     try {
-        const {email,fullName, phoneNumber, password} = req.body;
+        const {email, password} = req.body;
         const saltRounds = 10;
         const hashedPass = await brcypt.hash(password, saltRounds);
-        const result = await sql.query`INSERT INTO users (email, fullName, phoneNumber, password) VALUES (${email},${fullName},${phoneNumber},${hashedPass})`;
+        const result = await sql.query`INSERT INTO users (email, password) VALUES (${email},${hashedPass})`;
         res.json(result);
     } catch (error) {
         console.error('Error register:', error);

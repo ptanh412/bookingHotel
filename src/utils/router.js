@@ -1,6 +1,7 @@
 export const ROUTER = {
     HOME: '',
-    ROOMS: '/rooms',
+    LISTROOM: '/listRoom',
+    BOOKINGROOM: '/bookingRoom/:id',
     ABOUT: '/about',
     CONTACT: '/contact',
     LOGIN: '/login',
@@ -13,4 +14,6 @@ export const ROUTER = {
     ROOMS : '/rooms',
     GUESTS : '/guests',
     REPORT : '/report',
+    INFOCUSTOMER: '/booking/:id/infoCustomer',
+    PAYMENTCUSTOMER: '/paymentCustomer/:id',
 }

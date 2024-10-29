@@ -2,7 +2,7 @@ import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { ROUTER } from './utils/router';
 import Home from './pages/user/home/home';
-import Rooms from './pages/user/rooms/rooms';
+import ListRoom from './pages/user/rooms/listRoom';
 import About from './pages/user/about/about';
 import LayoutAdmin from './components/admin/layout/layoutAdmin';
 import LayoutUser from './components/user/layout/layoutUser';
@@ -13,8 +13,11 @@ import Rooms from './pages/admin/rooms';
 import Guests from './pages/admin/guests';
 import Report from './pages/admin/report';
 import PaymentConfirm from './pages/admin/bookings/paymentConfirm';
+import InfoCustomer from './pages/user/rooms/infoCustomer';
+import PaymentCutomer from './pages/user/rooms/paymentCustomer';
 import Login from './pages/auth/login';
 import { AlertProvider } from './context/AlertMessage';
+import BookingRoom from './pages/user/rooms/bookingRoom';
 
 const RenderRouter = () => {
     const routersUser = [
@@ -23,13 +26,25 @@ const RenderRouter = () => {
             component: <Home />
         },
         {
-            path: ROUTER.ROOMS,
-            component: <Rooms />
+            path: ROUTER.LISTROOM,
+            component: <ListRoom />
+        },
+        {
+            path: ROUTER.BOOKINGROOM,
+            component: <BookingRoom/>
         },
         {
             path: ROUTER.ABOUT,
             component: <About />
         },
+        {
+            path: ROUTER.INFOCUSTOMER,
+            component: <InfoCustomer />
+        },
+        {
+            path: ROUTER.PAYMENTCUSTOMER,
+            component: <PaymentCutomer />
+        }
     ]
     const routersAdmin = [
 

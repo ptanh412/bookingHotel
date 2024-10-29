@@ -20,7 +20,7 @@ const Menu = () => {
                                 onClick={() => setActiveTab('dashboard')}
                             >
                                 <FaChartBar className="mr-2" />
-                                <Link to="/admin/dashboard">Dashboard</Link>
+                                <Link to="/admin-home/dashboard">Dashboard</Link>
                             </button>
                         </li>
                         <li className="mb-4">
@@ -37,19 +37,19 @@ const Menu = () => {
                                         className={`w-48 text-left pl-3 py-2 hover:bg-gray-600 cursor-pointer rounded-lg ${activeTab === 'newBooked' ? 'bg-gray-600' : ''}`}
                                         onClick={() => setActiveTab('newBooked')}
                                     >
-                                        <Link to="/admin/bookings/newBooked">New Booked</Link>
+                                        <Link to="/admin-home/bookings/newBooked">New Booked</Link>
                                     </button>
                                     <button
                                         className={`w-48 text-left pl-3 py-2 hover:bg-gray-600 cursor-pointer rounded-lg ${activeTab === 'paymentConfirm' ? 'bg-gray-600' : ''}`}
                                         onClick={() => setActiveTab('paymentConfirm')}
                                     >
-                                        <Link to="/admin/bookings/paymentConfirm">Payment Confirm</Link>
+                                        <Link to="/admin-home/bookings/paymentConfirm">Payment Confirm</Link>
                                     </button>
                                     <button
                                         className={`w-48 text-left pl-3 py-2 hover:bg-gray-600 cursor-pointer rounded-lg ${activeTab === 'profileBookings' ? 'bg-gray-600' : ''}`}
                                         onClick={() => setActiveTab('profileBookings')}
                                     >
-                                        <Link to="/admin/bookings/profileBookings">Profile Bookings</Link>
+                                        <Link to="/admin-home/bookings/profileBookings">Profile Bookings</Link>
                                     </button>
                                 </div>
                             )}
