@@ -12,12 +12,12 @@ const Dashboard = () =>{
                 <p className="text-3xl font-bold">$24,500</p>
               </div>
               <div className="bg-yellow-100 p-4 rounded-lg shadow">
-                <h3 className="text-lg font-semibold mb-2">Occupancy Rate</h3>
-                <p className="text-3xl font-bold">78%</p>
+                <h3 className="text-lg font-semibold mb-2">Room Booked</h3>
+                <p className="text-3xl font-bold">78</p>
               </div>
               <div className="bg-purple-100 p-4 rounded-lg shadow">
-                <h3 className="text-lg font-semibold mb-2">Guest Satisfaction</h3>
-                <p className="text-3xl font-bold">4.7/5</p>
+                <h3 className="text-lg font-semibold mb-2">Room Cancelled</h3>
+                <p className="text-3xl font-bold">50</p>
               </div>
             </div>
         </div>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { AlertContext } from '../../../context/AlertMessage';
 const BookingRoom = () => {
     const {showAlert} = useContext(AlertContext);
@@ -64,7 +64,7 @@ const BookingRoom = () => {
 
     const handleSubmit = async () => {
         if (!checkIn || !checkOut) {
-            alert("Please select check-in and check-out dates.");
+            showAlert("Please select check-in and check-out dates.");
             return;
         }
         const data = {
@@ -76,14 +76,42 @@ const BookingRoom = () => {
             totalPrice,
         };
         try {
-            await axios.post('http://localhost:5000/api/createBooking', data);
+            const response = await axios.post('http://localhost:5000/api/createBooking', data);
+            const bookingId = response.data.bookingId;
             showAlert("Booking successful!", 'success');
-            navigate(`/booking/${room.id}/infoCustomer`);
+            navigate(`/booking/infoCustomer?roomId=${room.id}&bookingId=${bookingId}`);
         } catch (error) {
             console.error('Error creating booking:', error);
         }
     };
-
+    const handleAmountChange = (e) => {
+        const value = parseInt(e.target.value, 10);
+        if (value > room.capacity) {
+            showAlert(`The maximum number of guests is ${room.capacity}`, 'error');
+            setGuest(room.capacity);
+        }else{
+            setGuest(value);
+        }
+    }
+    const handleCheckInChange = (e) => {
+        const selectedDate = new Date(e.target.value);
+        const currentDate = new Date(); 
+        currentDate.setHours(0,0,0,0);
+        if (selectedDate >= currentDate) {
+            setCheckIn(e.target.value);
+        }else{
+            showAlert('Check-in date must be greater than or equal to the current date', 'error');
+        }
+    }
+    const handleCheckOutChange = (e) => {
+        const selectedDate = new Date(e.target.value);
+        const checkInDate = new Date(checkIn);
+        if (selectedDate > checkInDate) {
+            setCheckOut(e.target.value);
+        }else{
+            showAlert('Check-out date must be greater than check-in date', 'error');
+        }
+    }
     return (
         <div className='max-w-7xl mx-auto mb-64'>
             <div className='grid grid-cols-12 gap-20'>
@@ -130,7 +158,7 @@ const BookingRoom = () => {
                                 <input className='rounded-md py-1 px-5 w-[220px]'
                                     type='date'
                                     value={checkIn}
-                                    onChange={(e) => setCheckIn(e.target.value)}
+                                    onChange={handleCheckInChange}
                                 />
                             </div>
                             <div className='space-y-1 mt-3'>
@@ -138,12 +166,12 @@ const BookingRoom = () => {
                                 <input className='rounded-md py-1 px-5 w-[220px]'
                                     type='date'
                                     value={checkOut}
-                                    onChange={(e) => setCheckOut(e.target.value)}
+                                    onChange={handleCheckOutChange}
                                 />
                             </div>
                             <div className='col-span-2 mt-3'>
                                 <p className='font-semibold'>Amount</p>
-                                <input className='rounded-md py-1 px-2 w-[480px]' type='number' min='1' onChange= {(e) => setGuest(e.target.value)}/>
+                                <input className='rounded-md py-1 px-2 w-[480px]' type='number' min='1'  value={guest} onChange= {handleAmountChange}/>
                             </div>
                             <div className='col-span-2 my-5'>
                                 <p className='font-semibold'>Total Price: ${totalPrice}</p>

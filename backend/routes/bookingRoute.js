@@ -1,8 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const { getBookings, getNewBooked, confirmBooking, createBooking } = require('../controllers/bookingController');
+const { getBookings, getNewBooked, confirmBooking, createBooking, getBookingByUserId, cancelUnpaidBookings, getBookingById} = require('../controllers/bookingController');
 router.get('/api/bookings', getBookings);
 router.get('/api/newBooked', getNewBooked);
 router.put('/api/:id/confirmBooking', confirmBooking);
 router.post('/api/createBooking', createBooking);
+router.get('/api/bookings/:id', getBookingByUserId);
+router.post('/api/cancelUnpaidBookings', cancelUnpaidBookings);
+router.get('/api/detailBooking', getBookingById);
 module.exports = router;

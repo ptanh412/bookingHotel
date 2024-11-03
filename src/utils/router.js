@@ -14,6 +14,8 @@ export const ROUTER = {
     ROOMS : '/rooms',
     GUESTS : '/guests',
     REPORT : '/report',
-    INFOCUSTOMER: '/booking/:id/infoCustomer',
-    PAYMENTCUSTOMER: '/paymentCustomer/:id',
+    INFOCUSTOMER: '/booking/infoCustomer',
+    PAYMENTCUSTOMER: '/paymentCustomer',
+    HISTORYBOOKING: '/historyBooking',
+    DETAILBOOKING: '/detailBooking',
 }

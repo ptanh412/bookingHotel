@@ -27,4 +27,17 @@ const confirmPayment = async (req, res) =>{
         res.status(500).send('Error confirming payment');
     }
 }
-module.exports = {getPayment, confirmPayment, getPaymentPending};
+const createPayment = async (req, res) =>{
+    try {
+        const { booking_id, payment_method, amount_paid, form} = req.body;
+        const result = await sql.query`
+            INSERT INTO payments (booking_id, payment_method, amount_paid, form)
+            VALUES (${booking_id}, ${payment_method}, ${amount_paid}, ${form});
+        `;
+        res.json(result.recordset);
+    } catch (error) {
+        console.error('Error creating payment:', error);
+        res.status(500).send('Error creating payment');
+    }
+}
+module.exports = {getPayment, confirmPayment, getPaymentPending, createPayment};

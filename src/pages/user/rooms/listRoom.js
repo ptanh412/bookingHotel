@@ -71,11 +71,11 @@ const ListRoom = () => {
                             </select>
                         </div>
                         <div className="flex flex-col space-y-2">
-                            <label htmlFor="">Amount</label>
+                            <label htmlFor="">Amount of people</label>
                             <input type="text" class="w-full p-2 border rounded-lg" />
                         </div>
                         <div>
-                            <label class="block mb-2 text-gray-700">Giá</label>
+                            <label class="block mb-2 text-gray-700">Price</label>
                             <div className="flex flex-col w-full mt-3">
                                 <div className="flex justify-between w-full">
                                     <p className="text-gray-700">${value}</p>
@@ -123,7 +123,7 @@ const ListRoom = () => {
                                         </div>
                                         <div className='space-y-1'>
                                             <p className='font-semibold'>Amenities</p>
-                                            <div className='flex space-x-4 text-sm justify-between'> {/* Sử dụng flex để căn chỉnh các thẻ p nằm ngang */}
+                                            <div className='flex space-x-4 text-sm justify-between'>
                                                 {room.amenities_list ? (
                                                     room.amenities_list.split(', ').map((amenity, index) => (
                                                         <p key={index} className='bg-slate-200 rounded-lg px-5 py-1 w-fit'>

@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const { connectToDb} = require('./config/dbConfig');  
+const cronJobs = require('./cronJobs'); // Import cron jobs
 
 const app = express();
 

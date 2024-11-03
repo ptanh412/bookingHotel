@@ -18,6 +18,9 @@ import PaymentCutomer from './pages/user/rooms/paymentCustomer';
 import Login from './pages/auth/login';
 import { AlertProvider } from './context/AlertMessage';
 import BookingRoom from './pages/user/rooms/bookingRoom';
+import AdminRoute from './pages/admin/AdminRoute';
+import HistoryBooking from './pages/user/account/historyBooking';
+import DetailBooking from './pages/user/rooms/detailBooking';
 
 const RenderRouter = () => {
     const routersUser = [
@@ -31,7 +34,7 @@ const RenderRouter = () => {
         },
         {
             path: ROUTER.BOOKINGROOM,
-            component: <BookingRoom/>
+            component: <BookingRoom />
         },
         {
             path: ROUTER.ABOUT,
@@ -44,6 +47,14 @@ const RenderRouter = () => {
         {
             path: ROUTER.PAYMENTCUSTOMER,
             component: <PaymentCutomer />
+        },
+        {
+            path: ROUTER.HISTORYBOOKING,
+            component: <HistoryBooking />
+        },
+        {
+            path: ROUTER.DETAILBOOKING,
+            component: <DetailBooking />
         }
     ]
     const routersAdmin = [
@@ -109,21 +120,23 @@ const RenderRouter = () => {
                     <Route
                         path="/admin-home/*"
                         element={
-                            <LayoutAdmin>
-                                <Routes>
-                                    {
-                                        routersAdmin.map((router, index) => {
-                                            return (
-                                                <Route
-                                                    key={index}
-                                                    path={router.path}
-                                                    element={router.component}
-                                                />
-                                            )
-                                        })
-                                    }
-                                </Routes>
-                            </LayoutAdmin>
+                            <AdminRoute>
+                                <LayoutAdmin>
+                                    <Routes>
+                                        {
+                                            routersAdmin.map((router, index) => {
+                                                return (
+                                                    <Route
+                                                        key={index}
+                                                        path={router.path}
+                                                        element={router.component}
+                                                    />
+                                                )
+                                            })
+                                        }
+                                    </Routes>
+                                </LayoutAdmin>
+                            </AdminRoute>
                         }
                     />
                 </Routes>

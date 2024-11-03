@@ -9,18 +9,28 @@ const getUsers = async (req, res) =>{
         res.status(500).send('Error fetching data');
     }
 }
-const postUser = async (req,res) =>{
+const postUser = async (req, res) => {
     try {
-        const {email, password} = req.body;
+        const { email, password } = req.body;
+
+        // Kiểm tra xem email đã tồn tại trong cơ sở dữ liệu chưa
+        const checkUser = await sql.query`SELECT * FROM users WHERE email = ${email}`;
+        if (checkUser.recordset.length > 0) {
+            return res.status(400).send('Email đã tồn tại');
+        }
+
         const saltRounds = 10;
         const hashedPass = await brcypt.hash(password, saltRounds);
-        const result = await sql.query`INSERT INTO users (email, password) VALUES (${email},${hashedPass})`;
-        res.json(result);
+        const result = await sql.query`INSERT INTO users (email, password) VALUES (${email}, ${hashedPass})`;
+        
+        // Bạn có thể trả về thông tin người dùng đã tạo hoặc thông báo thành công
+        res.status(201).json({ message: 'Đăng ký thành công', userId: result.recordset.insertId });
     } catch (error) {
         console.error('Error register:', error);
         res.status(500).send('Error register');
     }
 }
+
 const loginUser = async (req,res) =>{
     try {
         const {email, password} = req.body;
