@@ -1,13 +1,19 @@
 import React, { useState } from 'react';
-import { FaBed, FaCalendarAlt, FaChartBar, FaSignOutAlt, FaUsers, FaCaretDown } from 'react-icons/fa';
+import { FaBed, FaCalendarAlt, FaChartBar, FaSignOutAlt, FaUsers, FaCaretDown, FaServicestack } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import {ROUTER} from '../../../utils/router';
+import { useNavigate } from 'react-router-dom';
 const Menu = () => {
     const [activeTab, setActiveTab] = useState('dashboard');
     const [showDropdown, setShowDropdown] = useState(false);
+    const navigate = useNavigate();
     const handleDropdown = () => {
         setShowDropdown(!showDropdown);
     }
-
+    const handleLogout = () => {
+        localStorage.removeItem('user');
+        navigate(ROUTER.LOGIN);
+    };
     return (
         <div>
             <aside className="flex-shrink-0 w-64 bg-gray-800 text-white p-4 h-full">
@@ -60,7 +66,16 @@ const Menu = () => {
                                 onClick={() => setActiveTab('rooms')}
                             >
                                 <FaBed className="mr-2" />
-                                <Link to="/admin/rooms">Rooms</Link>
+                                <Link to="/admin-home/roomManage">Rooms</Link>
+                            </button>
+                        </li>
+                        <li className="mb-4">
+                            <button
+                                className={`flex items-center w-full p-2 rounded-lg hover:bg-gray-700 ${activeTab === 'service' ? 'bg-gray-700' : ''}`}
+                                onClick={() => setActiveTab('service')}
+                            >
+                                <FaServicestack className="mr-2" />
+                                <Link to="/admin-home/serviceManage">Service</Link>
                             </button>
                         </li>
                         <li className="mb-4">
@@ -69,7 +84,7 @@ const Menu = () => {
                                 onClick={() => setActiveTab('guests')}
                             >
                                 <FaUsers className="mr-2" />
-                                <Link to="/admin/guests">Guests</Link>
+                                <Link to="/admin-home/guests">Guests</Link>
                             </button>
                         </li>
                         <li className="mb-4">
@@ -78,12 +93,12 @@ const Menu = () => {
                                 onClick={() => setActiveTab('reports')}
                             >
                                 <FaChartBar className="mr-2" />
-                                <Link to="/admin/report">Report</Link>
+                                <Link to="/admin-home/report">Report</Link>
                             </button>
                         </li>
                     </ul>
                 </nav>
-                <button className="flex items-center w-full p-2 rounded-lg mt-auto hover:bg-gray-700">
+                <button className="flex items-center w-full p-2 rounded-lg mt-auto hover:bg-gray-700" onClick={handleLogout}>
                     <FaSignOutAlt className="mr-2" />
                     Logout
                 </button>

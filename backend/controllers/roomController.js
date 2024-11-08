@@ -20,7 +20,6 @@ const getRooms = async (req, res) => {
                   r.image,
                   r.status;
       `);
-
     res.json(result.recordset);
   } catch (error) {
     console.error('Error fetching data:', error);

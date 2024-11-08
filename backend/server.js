@@ -16,12 +16,14 @@ const userRoute = require('./routes/userRoute');
 const bookingRoute = require('./routes/bookingRoute');
 const paymentRoute = require('./routes/paymentRoute');
 const customerRoute = require('./routes/customerRoute');
+const serviceRoute = require('./routes/serviceRoute');
 app.use(userRoute);
 app.use(typeRoomRoute);
 app.use(roomRoute);
 app.use(bookingRoute);
 app.use(paymentRoute);
 app.use(customerRoute);
+app.use(serviceRoute);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

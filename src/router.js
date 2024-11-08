@@ -21,6 +21,7 @@ import BookingRoom from './pages/user/rooms/bookingRoom';
 import AdminRoute from './pages/admin/AdminRoute';
 import HistoryBooking from './pages/user/account/historyBooking';
 import DetailBooking from './pages/user/rooms/detailBooking';
+import Service from './pages/admin/service';
 
 const RenderRouter = () => {
     const routersUser = [
@@ -80,7 +81,7 @@ const RenderRouter = () => {
             component: <ProfileBookings />
         },
         {
-            path: ROUTER.ROOMS,
+            path: ROUTER.ROOMMANAGE,
             component: <Rooms />
         },
         {
@@ -90,6 +91,9 @@ const RenderRouter = () => {
         {
             path: ROUTER.REPORT,
             component: <Report />
+        },{
+            path: ROUTER.SERVICEMANAGE,
+            component: <Service />
         }
     ]
     return (

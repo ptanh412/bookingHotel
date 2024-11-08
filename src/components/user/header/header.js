@@ -31,7 +31,7 @@ const Header = () => {
     return (
         <header className="fixed left-0 right-0 bg-white shadow-sm p-4 grid grid-cols-12 mx-auto px-10 items-center w-full ">
             {alertMessage && (
-                <div className={`fixed top-0 mx-auto transform left-[700px] ${alertType === 'success' ? "bg-green-100 border border-green-400 text-green-700" : "bg-red-100 border border-red-400 text-red-700"} rounded-lg mb-4 w-60 max-w-md text-center z-50 animate-slide-down`} role="alert">
+                <div className={`fixed top-0 mx-auto transform left-[700px] py-1 ${alertType === 'success' ? "bg-green-100 border border-green-400 text-green-700" : "bg-red-100 border border-red-400 text-red-700"} rounded-lg mb-4 w-60 max-w-md text-center z-50 animate-slide-down`} role="alert">
                     <span className="text-center flex justify-center w-full items-center space-x-1 px-5">
                         {alertType === 'success' ? <FaCheckCircle /> : <FaExclamationCircle />}
                         <p className="text-sm">{alertMessage}</p>

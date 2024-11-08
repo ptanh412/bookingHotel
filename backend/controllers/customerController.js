@@ -125,5 +125,15 @@ const getCustByPrimary = async (req, res) => {
         });
     }
 };
-
-module.exports = { createOrUpdateCustomer, getCustByUserId, getCustByPrimary };
+const getALlCustomer = async (req, res) => {
+    try {
+        const result = await sql.query`
+            SELECT * FROM customers
+        `;
+        res.json(result.recordset);
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        res.status(500).send('Error fetching data');
+    }
+};  
+module.exports = { createOrUpdateCustomer, getCustByUserId, getCustByPrimary,getALlCustomer };

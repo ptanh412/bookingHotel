@@ -67,6 +67,24 @@ const BookingRoom = () => {
             showAlert("Please select check-in and check-out dates.");
             return;
         }
+        try {
+            const response = await axios.get(`http://localhost:5000/api/checkRoomAvailability`, {
+                params: {
+                    room_id: room.id,
+                    checkIn,
+                    checkOut,
+                },
+            });
+    
+            if (response.data.hasBooking) {
+                showAlert('This room is already booked for the selected dates.', 'error');
+                return; // Dừng lại nếu đã có đơn đặt phòng
+            }
+        } catch (error) {
+            console.error('Error checking existing bookings:', error);
+            showAlert('An error occurred while checking bookings. Please try again.', 'error');
+            return;
+        }
         const data = {
             user_id: user.id,
             room_id: room.id,

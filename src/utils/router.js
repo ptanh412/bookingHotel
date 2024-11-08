@@ -11,11 +11,12 @@ export const ROUTER = {
     NEWBOOKED: '/bookings/newBooked',
     PROFILEBOOKINGS : '/bookings/profileBookings',
     PAYMENTCONFIRM:'/bookings/paymentConfirm',
-    ROOMS : '/rooms',
     GUESTS : '/guests',
     REPORT : '/report',
     INFOCUSTOMER: '/booking/infoCustomer',
     PAYMENTCUSTOMER: '/paymentCustomer',
     HISTORYBOOKING: '/historyBooking',
     DETAILBOOKING: '/detailBooking',
+    ROOMMANAGE: '/roomManage',
+    SERVICEMANAGE: '/serviceManage',
 }

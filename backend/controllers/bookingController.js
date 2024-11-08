@@ -2,10 +2,10 @@ const { sql } = require('../config/dbConfig');
 
 const getBookings = async (req, res) => {
     try {
-        const result = await sql.query`SELECT booking.*, users.fullName, room.name
+        const result = await sql.query`SELECT bookings.*, customers.fullName as fullName, rooms.name as roomName
                                         FROM bookings
-                                        JOIN users ON booking.user_id = users.id
-                                        JOIN room ON booking.room_id = room.id;`;
+                                        JOIN customers ON bookings.customer_id = customers.id
+                                        JOIN rooms ON bookings.room_id = rooms.id;`;
         res.json(result.recordset);
     } catch (error) {
         console.error('Error fetching data:', error);
@@ -93,6 +93,16 @@ const createBooking = async (req, res) => {
     }
 };
 
+const checkRoomAvailability = async (req, res) => { 
+    const { room_id, checkIn, checkOut } = req.query; // Lấy tham số từ req.query
+    try {
+        const result = await sql.query`EXEC sp_CheckRoomAvailability ${room_id}, ${checkIn}, ${checkOut};`; // Truyền tham số vào stored procedure
+        res.json({ message: result.recordset[0].Message }); // Trả về thông điệp
+    } catch (error) {
+        console.error('Error checking booking:', error);
+        res.status(500).send('Error checking booking');
+    }
+}
 
 const confirmBooking = async (req, res) => {
     try {
@@ -115,4 +125,4 @@ const cancelUnpaidBookings = async () => {
     }
 };
 
-module.exports = { getBookings, getNewBooked, confirmBooking, createBooking, getBookingByUserId , cancelUnpaidBookings, getBookingById};
+module.exports = { getBookings, getNewBooked, confirmBooking, createBooking, getBookingByUserId , cancelUnpaidBookings, getBookingById, checkRoomAvailability};
