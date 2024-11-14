@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { AlertContext } from '../../../context/AlertMessage';
 const BookingRoom = () => {
-    const {showAlert} = useContext(AlertContext);
+    const { showAlert } = useContext(AlertContext);
     const [room, setRoom] = useState({});
     const [user, setUser] = useState({});
     const [checkIn, setCheckIn] = useState('');
@@ -11,6 +11,7 @@ const BookingRoom = () => {
     const [totalPrice, setTotalPrice] = useState(0);
     const [typeRoom, setTypeRoom] = useState([]);
     const [guest, setGuest] = useState(1);
+    const [service, setService] = useState([]);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -48,19 +49,30 @@ const BookingRoom = () => {
         getTypeRoom();
     }, []);
 
-    useEffect(() => {
-        calculateTotalPrice();
-    }, [checkIn, checkOut, room.price]);
-
-    const calculateTotalPrice = () => {
-        if (checkIn && checkOut && room.price) {
-            const checkInDate = new Date(checkIn);
-            const checkOutDate = new Date(checkOut);
-            const timeDiff = checkOutDate - checkInDate;
-            const nightCount = Math.ceil(timeDiff / (1000 * 3600 * 24));
-            setTotalPrice(nightCount * room.price);
+    const calculateTotalPrice = async (checkIn, checkOut, service) => {
+        if (!checkIn || !checkOut || !service.length) return;
+    
+        try {
+            const response = await axios.post("http://localhost:5000/api/calculateTotalPrice", {
+                checkIn,
+                checkOut,
+                room_id: room.id,
+                user_id: user.id,
+                selectedServices: service,
+            });
+            
+            setTotalPrice(response.data.totalPrice);
+        } catch (error) {
+            console.error("Error calculating total price:", error);
         }
     };
+    
+
+    // Gọi hàm tính toán mỗi khi check-in, check-out hoặc dịch vụ được chọn thay đổi
+    useEffect(() => {
+        calculateTotalPrice(checkIn, checkOut, service);
+    }, [checkIn, checkOut, service]);
+    
 
     const handleSubmit = async () => {
         if (!checkIn || !checkOut) {
@@ -75,14 +87,14 @@ const BookingRoom = () => {
                     checkOut,
                 },
             });
-    
+
             if (response.data.hasBooking) {
                 showAlert('This room is already booked for the selected dates.', 'error');
                 return; // Dừng lại nếu đã có đơn đặt phòng
             }
         } catch (error) {
             console.error('Error checking existing bookings:', error);
-            showAlert('An error occurred while checking bookings. Please try again.', 'error');
+            showAlert('This room is already booked for the selected dates. Please try again.', 'error');
             return;
         }
         const data = {
@@ -92,10 +104,17 @@ const BookingRoom = () => {
             checkOut,
             guest_count: guest,
             totalPrice,
+            service_id: service
         };
         try {
             const response = await axios.post('http://localhost:5000/api/createBooking', data);
             const bookingId = response.data.bookingId;
+            if (service) {
+                await axios.post('http://localhost:5000/api/createBookingService', {
+                    booking_id: bookingId,
+                    service_id: service
+                });
+            }
             showAlert("Booking successful!", 'success');
             navigate(`/booking/infoCustomer?roomId=${room.id}&bookingId=${bookingId}`);
         } catch (error) {
@@ -107,29 +126,51 @@ const BookingRoom = () => {
         if (value > room.capacity) {
             showAlert(`The maximum number of guests is ${room.capacity}`, 'error');
             setGuest(room.capacity);
-        }else{
+        } else {
             setGuest(value);
         }
     }
     const handleCheckInChange = (e) => {
         const selectedDate = new Date(e.target.value);
-        const currentDate = new Date(); 
-        currentDate.setHours(0,0,0,0);
+        const currentDate = new Date();
+        currentDate.setHours(0, 0, 0, 0); // Đặt giờ phút giây của ngày hiện tại về 0 để so sánh chính xác
+    
         if (selectedDate >= currentDate) {
             setCheckIn(e.target.value);
-        }else{
+            
+            // Nếu đã có ngày check-out mà ngày check-in thay đổi, kiểm tra tính hợp lệ
+            if (checkOut && new Date(checkOut) <= selectedDate) {
+                setCheckOut(""); // Xóa ngày check-out nếu nó không còn hợp lệ
+                showAlert('Check-out date must be greater than check-in date', 'warning');
+            }
+        } else {
             showAlert('Check-in date must be greater than or equal to the current date', 'error');
         }
-    }
+    };
+    
     const handleCheckOutChange = (e) => {
         const selectedDate = new Date(e.target.value);
         const checkInDate = new Date(checkIn);
+    
+        if (!checkIn) {
+            showAlert('Please select a check-in date first', 'error');
+            return;
+        }
+    
         if (selectedDate > checkInDate) {
             setCheckOut(e.target.value);
-        }else{
+        } else {
             showAlert('Check-out date must be greater than check-in date', 'error');
         }
-    }
+    };
+    
+    const handleServiceChange = (e) => {
+        const selectedService = e.target.value;
+        setService([selectedService]); // Đảm bảo `service` là một mảng ngay cả khi chỉ có một phần tử
+    
+        // Gọi lại calculateTotalPrice với mảng `service`
+        calculateTotalPrice(checkIn, checkOut, [selectedService]);
+    };
     return (
         <div className='max-w-7xl mx-auto mb-64'>
             <div className='grid grid-cols-12 gap-20'>
@@ -165,10 +206,15 @@ const BookingRoom = () => {
                             </div>
                             <div className='space-y-1 mt-3'>
                                 <p className='font-semibold'>Service</p>
-                                <select className="rounded-md py-1 px-5 border-none w-[220px]">
-                                    <option value="">Spa</option>
-                                    <option value="">Gym</option>
-                                    <option value="">Triple</option>
+                                <select
+                                    className="rounded-md py-1 px-5 border-none w-[220px]"
+                                    value={service}
+                                    onChange={handleServiceChange}
+                                >
+                                    <option value="">Select service</option>
+                                    <option value="1">Room Cleaning</option>
+                                    <option value="2">Spa</option>
+                                    <option value="3">Airport Pickup</option>
                                 </select>
                             </div>
                             <div className='space-y-1 mt-3'>
@@ -189,7 +235,7 @@ const BookingRoom = () => {
                             </div>
                             <div className='col-span-2 mt-3'>
                                 <p className='font-semibold'>Amount</p>
-                                <input className='rounded-md py-1 px-2 w-[480px]' type='number' min='1'  value={guest} onChange= {handleAmountChange}/>
+                                <input className='rounded-md py-1 px-2 w-[480px]' type='number' min='1' value={guest} onChange={handleAmountChange} />
                             </div>
                             <div className='col-span-2 my-5'>
                                 <p className='font-semibold'>Total Price: ${totalPrice}</p>

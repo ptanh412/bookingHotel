@@ -92,6 +92,52 @@ const createBooking = async (req, res) => {
         res.status(500).send('Error creating booking');
     }
 };
+const addBookingService = async (req, res) => {
+    try {
+        const { booking_id, service_id } = req.body;
+
+        await sql.query`
+            INSERT INTO booking_service (booking_id, service_id)
+            VALUES (${booking_id}, ${service_id});
+        `;
+
+        res.json({ message: "Service added to booking successfully" });
+    } catch (error) {
+        console.error('Error adding service to booking:', error);
+        res.status(500).send('Error adding service to booking');
+    }
+};
+// API tính toán total price
+const calculateTotalPrice = async (req, res) => {
+    const { checkIn, checkOut, room_id, selectedServices, user_id } = req.body;
+
+    // Kiểm tra đầu vào
+    if (!checkIn || !checkOut || !room_id || !user_id) {
+        return res.status(400).json({ message: "Missing required fields" });
+    }
+
+    try {
+        // Tạo chuỗi cho selectedServices để truyền vào stored procedure
+        const servicesString = selectedServices ? selectedServices.join(',') : '';
+
+        const result = await sql.query`
+            EXEC sp_calculate_total_amount 
+            @check_in=${checkIn}, 
+            @check_out=${checkOut}, 
+            @room_id=${room_id}, 
+            @user_id=${user_id},
+            @selected_services=${servicesString}
+        `;
+
+        const totalPrice = result.recordset[0].total_amount;
+        res.json({ totalPrice });
+    } catch (error) {
+        console.error("Error calculating total price:", error);
+        res.status(500).json({ message: "Error calculating total price" });
+    }
+};
+
+
 
 const checkRoomAvailability = async (req, res) => { 
     const { room_id, checkIn, checkOut } = req.query; // Lấy tham số từ req.query
@@ -125,4 +171,4 @@ const cancelUnpaidBookings = async () => {
     }
 };
 
-module.exports = { getBookings, getNewBooked, confirmBooking, createBooking, getBookingByUserId , cancelUnpaidBookings, getBookingById, checkRoomAvailability};
+module.exports = { getBookings, getNewBooked, confirmBooking, createBooking, getBookingByUserId , cancelUnpaidBookings, getBookingById, checkRoomAvailability, addBookingService, calculateTotalPrice };

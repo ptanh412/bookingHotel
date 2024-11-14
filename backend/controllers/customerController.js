@@ -21,20 +21,38 @@ const createOrUpdateCustomer = async (req, res) => {
                 WHERE id = ${bookingId} AND user_id = ${user_id}`;
             return res.json({ message: 'Customer updated successfully', customerId });
         } else {
-            // Kiểm tra khách hàng chính đã tồn tại nếu là khách hàng mới
-            if (is_primary === 1) {
-                const existingCustomerResult = await sql.query`
-                    SELECT * FROM customers WHERE idCard = ${idCard} AND is_primary = 1
-                `;
+            // Kiểm tra sự tồn tại của khách hàng dựa trên idCard
+            const existingCustomerResult = await sql.query`
+                SELECT * FROM customers WHERE idCard = ${idCard}
+            `;
 
-                if (existingCustomerResult.recordset.length > 0) {
-                    return res.status(400).json({
-                        message: 'Primary customer already exists with this ID Card.'
-                    });
+            if (existingCustomerResult.recordset.length > 0) {
+                const existingCustomer = existingCustomerResult.recordset[0];
+                
+                // Nếu khách hàng đã tồn tại và có is_primary = 0, cập nhật thông tin
+                if (existingCustomer.is_primary === 0) {
+                    customerId = existingCustomer.id;
+
+                    await sql.query`
+                        UPDATE customers
+                        SET fullName = ${fullName}, phoneNumber = ${phone}, sex = ${sex}, is_primary = ${is_primary}
+                        WHERE id = ${customerId}
+                    `;
+                    await sql.query`
+                        UPDATE bookings
+                        SET customer_id = ${customerId}
+                        WHERE id = ${bookingId} AND user_id = ${user_id}
+                    `;
+                    return res.json({ message: 'Existing customer updated successfully', customerId });
                 }
+
+                // Nếu khách hàng đã tồn tại và là khách hàng chính (is_primary = 1)
+                return res.status(400).json({
+                    message: 'Primary customer already exists with this ID Card.'
+                });
             }
 
-            // Tạo mã id mới cho khách hàng
+            // Tạo mã id mới cho khách hàng nếu khách hàng chưa tồn tại
             const lastIdResult = await sql.query`
                 SELECT TOP 1 id FROM customers ORDER BY id DESC
             `;
@@ -66,10 +84,11 @@ const createOrUpdateCustomer = async (req, res) => {
             customerId: customerId
         });
     } catch (error) {
-        console.error('Error in createOrUpdateCustomer:', error); // Log lỗi để dễ dàng tìm nguyên nhân
+        console.error('Error in createOrUpdateCustomer:', error);
         res.status(500).json({ message: "Failed to process customer information" });
     }
 };
+
 
 
 const getCustByUserId = async (req, res) => {
@@ -135,5 +154,5 @@ const getALlCustomer = async (req, res) => {
         console.error('Error fetching data:', error);
         res.status(500).send('Error fetching data');
     }
-};  
-module.exports = { createOrUpdateCustomer, getCustByUserId, getCustByPrimary,getALlCustomer };
+};
+module.exports = { createOrUpdateCustomer, getCustByUserId, getCustByPrimary, getALlCustomer };

@@ -1,6 +1,6 @@
-const {sql} = require('../config/dbConfig');
+const { sql } = require('../config/dbConfig');
 const brcypt = require('bcrypt');
-const getUsers = async (req, res) =>{
+const getUsers = async (req, res) => {
     try {
         const result = await sql.query`SELECT * FROM users`;
         res.json(result.recordset);
@@ -21,26 +21,33 @@ const postUser = async (req, res) => {
 
         const saltRounds = 10;
         const hashedPass = await brcypt.hash(password, saltRounds);
-        const result = await sql.query`INSERT INTO users (email, password) VALUES (${email}, ${hashedPass})`;
-        
-        // Bạn có thể trả về thông tin người dùng đã tạo hoặc thông báo thành công
-        res.status(201).json({ message: 'Đăng ký thành công', userId: result.recordset.insertId });
+        const result = await sql.query`
+        INSERT INTO users (email, password) 
+        VALUES (${email}, ${hashedPass});
+        SELECT SCOPE_IDENTITY() AS insertId;
+    `;
+
+        // Sau đó kiểm tra kết quả trả về
+        const insertId = result.recordset[0].insertId;
+
+        res.status(201).json({ message: 'Đăng ký thành công', userId: insertId });
+
     } catch (error) {
         console.error('Error register:', error);
         res.status(500).send('Error register');
     }
 }
 
-const loginUser = async (req,res) =>{
+const loginUser = async (req, res) => {
     try {
-        const {email, password} = req.body;
+        const { email, password } = req.body;
         const result = await sql.query`SELECT * FROM users WHERE email = ${email}`;
         const user = result.recordset[0];
-        if(!user){
+        if (!user) {
             return res.status(404).send('User not found');
         }
         const isPasswordValid = await brcypt.compare(password, user.password);
-        if (!isPasswordValid){
+        if (!isPasswordValid) {
             return res.status(401).send('Invalid password');
         }
         res.json(user);
@@ -49,4 +56,4 @@ const loginUser = async (req,res) =>{
         res.status(500).send('Error login data');
     }
 }
-module.exports = {getUsers, postUser, loginUser};
+module.exports = { getUsers, postUser, loginUser };

@@ -1,4 +1,7 @@
+import image from '../../../assets/1920x1080_px_architecture_Hotels_Marina_Bay_reflection_Singapore-1199381.jpg';
+
 const Home = () => {
+    
     return (
         <div className="max-w-6xl mx-auto  pt-32">
             <div className="grid grid-cols-2">
@@ -9,8 +12,8 @@ const Home = () => {
                 </div>
                 <div>
                     <img
-                        src="https://res.cloudinary.com/doruhcyf6/image/upload/v1726802637/homestay-quy-nhon-4588-1592910-1801-3454-1655448395_nos8q5.jpg"
-                        alt=""
+                        src={image}
+                        alt="Home"
                         className="w-full h-full rounded-lg"
                     />
                 </div>
@@ -20,7 +23,7 @@ const Home = () => {
                 <div className="grid grid-cols-3 gap-32">
                     <div>
                         <img
-                            src="https://res.cloudinary.com/doruhcyf6/image/upload/v1726802637/homestay-quy-nhon-4588-1592910-1801-3454-1655448395_nos8q5.jpg"
+                            src="https://res.cloudinary.com/doruhcyf6/image/upload/v1731494727/pexels-photo-6129967_qulfa1.jpg"
                             alt=""
                             className="w-full h-60 rounded-full"
                         />
@@ -29,7 +32,7 @@ const Home = () => {
                     </div>
                     <div>
                         <img
-                            src="https://res.cloudinary.com/doruhcyf6/image/upload/v1726802637/homestay-quy-nhon-4588-1592910-1801-3454-1655448395_nos8q5.jpg"
+                            src="https://res.cloudinary.com/doruhcyf6/image/upload/v1731494819/cac-dich-vu-trong-khach-san_ppqyoi.jpg"
                             alt=""
                             className="w-full h-60 rounded-full"
                         />
@@ -38,7 +41,7 @@ const Home = () => {
                     </div>
                     <div>
                         <img
-                            src="https://res.cloudinary.com/doruhcyf6/image/upload/v1726802637/homestay-quy-nhon-4588-1592910-1801-3454-1655448395_nos8q5.jpg"
+                            src="https://res.cloudinary.com/doruhcyf6/image/upload/v1731494706/sa-loai-hinh-thu-gian-pho-bien_quuk6o.webp"
                             alt=""
                             className="w-full h-60 rounded-full"
                         />
@@ -55,7 +58,7 @@ const Home = () => {
                 <div className="grid grid-cols-3 gap-20">
                     <div className="shadow-xl rounded-lg">
                         <img
-                            src="https://res.cloudinary.com/doruhcyf6/image/upload/v1726802637/homestay-quy-nhon-4588-1592910-1801-3454-1655448395_nos8q5.jpg"
+                            src="https://res.cloudinary.com/doruhcyf6/image/upload/v1731495025/pexels-photo-6434634_suho8a.webp"
                             alt=""
                             className="w-full h-60 rounded-t-lg"
                         />
@@ -66,23 +69,23 @@ const Home = () => {
                     </div>
                     <div className="shadow-xl rounded-lg">
                         <img
-                            src="https://res.cloudinary.com/doruhcyf6/image/upload/v1726802637/homestay-quy-nhon-4588-1592910-1801-3454-1655448395_nos8q5.jpg"
+                            src="https://res.cloudinary.com/doruhcyf6/image/upload/v1731495132/59464668_mlyjnp.jpg"
                             alt=""
                             className="w-full h-60 rounded-t-lg"
                         />
                         <div className="p-5">
-                            <h1 className="text-2xl font-semibold">Deluxe Rooms</h1>
+                            <h1 className="text-2xl font-semibold">Single Rooms</h1>
                             <p className="text-gray-400">Spacious room with beautiful city view, fully equipped with modern amenities.</p>
                         </div>
                     </div>
                     <div className="shadow-xl rounded-lg">
                         <img
-                            src="https://res.cloudinary.com/doruhcyf6/image/upload/v1726802637/homestay-quy-nhon-4588-1592910-1801-3454-1655448395_nos8q5.jpg"
+                            src="https://res.cloudinary.com/doruhcyf6/image/upload/v1731495194/5bf8a789-2234-4321-921d-da46e0660d3b_rgallery_vvckfc.jpg"
                             alt=""
                             className="w-full h-60 rounded-t-lg"
                         />
                         <div className="p-5">
-                            <h1 className="text-2xl font-semibold">Deluxe Rooms</h1>
+                            <h1 className="text-2xl font-semibold">Suite Rooms</h1>
                             <p className="text-gray-400">Spacious room with beautiful city view, fully equipped with modern amenities.</p>
                         </div>
                     </div>

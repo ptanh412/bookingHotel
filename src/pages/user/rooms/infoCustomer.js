@@ -22,32 +22,38 @@ const InfoCustomer = () => {
     const roomId = searchParams.get('roomId');
     const bookingId = searchParams.get('bookingId');
     const navigate = useNavigate();
-    const getExistCustomer = async (userId) => {
-        if (!userId) return;
-
-        try {
-            const response = await axios.get(`http://localhost:5000/api/customerByPrimary`, {
-                params: {
-                    userId: userId,
-                    is_primary: 1
-                }
-            });
-            if (response.data) {
-                setExistCustomer(response.data);
-                setFullName(response.data.fullName || '');
-                setPhone(response.data.phoneNumber || '');
-                setIdCard(response.data.idCard || '');
-                setSex(response.data.sex || '');
-            }
-            console.log("Existing customer data:", response.data);
-        } catch (error) {
-            if (error.response && error.response.status !== 404) {
-                console.error('Error fetching customer data:', error);
-            }
-        }
-
-    };
     useEffect(() => {
+        const getExistCustomer = async (userId) => {
+            if (!userId) return;
+
+            try {
+                const response = await axios.get(`http://localhost:5000/api/customerByPrimary`, {
+                    params: {
+                        userId: userId,
+                        is_primary: 1
+                    }
+                });
+                if (response.data) {
+                    setExistCustomer(response.data);
+                    setFullName(response.data.fullName || '');
+                    setPhone(response.data.phoneNumber || '');
+                    setIdCard(response.data.idCard || '');
+                    setSex(response.data.sex || '');
+                } else {
+                    setExistCustomer([]);
+                    setFullName('');
+                    setPhone('');
+                    setIdCard('');
+                    setSex('');
+                }
+                console.log("Existing customer data:", response.data);
+            } catch (error) {
+                if (error.response && error.response.status !== 404) {
+                    console.error('Error fetching customer data:', error);
+                }
+            }
+
+        };
         const getRoomById = async () => {
             try {
                 const response = await axios.get(`http://localhost:5000/api/rooms/${roomId}`);
@@ -127,12 +133,18 @@ const InfoCustomer = () => {
         setTab(index);
         if (index === 0) {
             setIsPrimary(true);
-            if (existCustomer) {
+            if (existCustomer && existCustomer.id) {
                 setFullName(existCustomer.fullName || '');
-                setPhone(existCustomer.phone || '');
+                setPhone(existCustomer.phoneNumber || '');
                 setIdCard(existCustomer.idCard || '');
                 setSex(existCustomer.sex || '');
-            }
+            } 
+            // else {
+            //     setFullName('');
+            //     setPhone('');
+            //     setIdCard('');
+            //     setSex('');
+            // }
         } else {
             setIsPrimary(false);
             setFullName('');
@@ -213,7 +225,8 @@ const InfoCustomer = () => {
                                         placeholder='Enter your full name'
                                         value={fullName}
                                         onChange={(e) => setFullName(e.target.value)}
-                                        disabled={!!existCustomer}
+                                        required
+                                        readOnly={existCustomer && existCustomer.id ? true : false}
                                     />
                                 </div>
                                 <div className='space-y-4'>
@@ -222,8 +235,8 @@ const InfoCustomer = () => {
                                         placeholder='Enter your phone number'
                                         value={phone}
                                         onChange={(e) => setPhone(e.target.value)}
-                                        disabled={!!existCustomer}
-
+                                        required
+                                        readOnly={existCustomer && existCustomer.id ? true : false}
                                     />
                                 </div>
                                 <div className='space-y-4'>
@@ -232,8 +245,8 @@ const InfoCustomer = () => {
                                         placeholder='Enter your ID card number'
                                         value={idCard}
                                         onChange={(e) => setIdCard(e.target.value)}
-                                        disabled={!!existCustomer}
-
+                                        required
+                                        readOnly={existCustomer && existCustomer.id ? true : false}
                                     />
                                 </div>
                                 <div className='space-y-4'>
@@ -241,8 +254,8 @@ const InfoCustomer = () => {
                                     <select className="rounded-md py-1 px-5 border-none w-[500px]"
                                         value={sex}
                                         onChange={(e) => setSex(e.target.value)}
-                                        disabled={!!existCustomer}
-
+                                        required
+                                        disabled={existCustomer && existCustomer.id ? true : false} 
                                     >
                                         <option value="">Select Gender</option>
                                         <option value="Male">Male</option>

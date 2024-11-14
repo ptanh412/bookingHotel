@@ -18,6 +18,7 @@ const PaymentCutomer = () => {
     const [form, setForm] = useState('');
     const [amountPaid, setAmountPaid] = useState(room.price);
     const navigate = useNavigate();
+    const user = JSON.parse(localStorage.getItem('user'));
     useEffect(() => {
         const getNewBooked = async () => {
             try {
@@ -74,9 +75,13 @@ const PaymentCutomer = () => {
                 booking_id: bookingId,
                 payment_method: tab,
                 amount_paid: amountPaid,
-                form
+                form,
+                email: user.email,
+                roomName: room.name,
+                checkInDate: booking.check_in,
+                checkOutDate: booking.check_out 
             });
-            showAlert('Payment successful', 'success');
+            showAlert('Payment successful. Please check your mail', 'success');
             navigate(`/historyBooking?userId=${booking.user_id}`)
             console.log(response.data);
         } catch (error) {
