@@ -10,6 +10,8 @@ const DetailBooking = () => {
     const [typeRoom, setTypeRoom] = useState([]);
     const [searchParams] = useSearchParams();
     const bookingId = searchParams.get('bookingId');
+    const isCancel = searchParams.get('isCancel');
+    const [reasonOpen, setReasonOpen] = useState(false);
     useEffect(() => {
         const fetchBooking = async () => {
             try {
@@ -170,28 +172,60 @@ const DetailBooking = () => {
                                 />
                             </div>
                         </div>
-                        <div className='space-y-3'>
-                            <p className='font-semibold text-3xl'>Status</p>
-                            <p className={`rounded-full py-2 px-5 border-none w-full font-bold text-center ${booking.status == 'completed' ? 'bg-green-500' : booking.status === 'pending' ? 'bg-yellow-500' : booking.status === 'cancelled' ? 'bg-red-500' : ''}`}>
-                                {booking.status}
-                            </p>
-                        </div>
-                        <div className='col-span-2 mt-5 text-left'>
+                        {isCancel ? (
+                            <div className='space-y-3'>
+                                <p className='font-semibold text-3xl'>Reason Cancel</p>
+                                <select
+                                    className="rounded-full py-2 px-5 outline-none w-full font-bold text-center bg-gray-200"
+                                    onBlur={() => setReasonOpen(false)}
+                                    onFocus={() => setReasonOpen(true)}
+                                // value={booking.cancelReason || ''}
+                                // onChange={handleReasonChange}
+                                >
+                                    <option value="" hidden={reasonOpen}>Select cancel reason</option>
+                                    <option value="Personal reasons">Personal reasons</option>
+                                    <option value="Booking error">Booking error</option>
+                                    <option value="Change of plans">Change of plans</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        ) : (
+                            <div className='space-y-3'>
+                                <p className='font-semibold text-3xl'>Status</p>
+                                <p className={`rounded-full py-2 px-5 border-none w-full font-bold text-center ${booking.status == 'completed' ? 'bg-green-500' : booking.status === 'pending' ? 'bg-yellow-500' : booking.status === 'cancelled' ? 'bg-red-500' : ''}`}>
+                                    {booking.status}
+                                </p>
+                            </div>
+                        )}
+                        <div className='col-span-2 mt-5'>
                             {booking.status === 'pending' ? (
                                 <div className="flex justify-between">
-                                    <Link type="button" className='bg-black text-white px-4 py-2 rounded-lg font-bold' to={`/paymentCustomer?roomId=${booking.room_id}&bookingId=${booking.id}&customerId=${booking.customer_id}`}>
+                                    <Link
+                                        type="button"
+                                        className="bg-black text-white px-4 py-2 rounded-lg font-bold"
+                                        to={`/paymentCustomer?roomId=${booking.room_id}&bookingId=${booking.id}&customerId=${booking.customer_id}`}
+                                    >
                                         Continue the booking
                                     </Link>
-                                    <Link type="button" className='bg-gray-500 text-white px-4 py-2 rounded-lg font-bold' to={`/historyBooking?userId=${booking.user_id}`}>
+                                    <Link
+                                        type="button"
+                                        className="bg-gray-500 text-white px-4 py-2 rounded-lg font-bold"
+                                        to={`/historyBooking?userId=${booking.user_id}`}
+                                    >
                                         Back to history booked
                                     </Link>
                                 </div>
                             ) : (
-                                <Link type="button" className='bg-black text-white py-2 text-lg  px-[140px] rounded-lg font-bold' to={`/historyBooking?userId=${booking.user_id}`}>
-                                    Back to history booked
+                                <Link
+                                    type="button"
+                                    className="bg-black text-white py-2 text-lg w-full block rounded-lg font-bold text-center"
+                                    to={`/historyBooking?userId=${booking.user_id}`}
+                                >
+                                    {isCancel ? 'Confirm cancel booked' : 'Back to history booked'}
                                 </Link>
                             )}
                         </div>
+
                     </form>
                 </div>
             </div>

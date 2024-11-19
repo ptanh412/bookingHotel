@@ -36,6 +36,11 @@ const sendPaymentEmail = async (recipientEmail, bookingDetails) => {
             pass: process.env.EMAIL_PASS
         }
     });
+
+    // Định dạng ngày tháng thành dd/mm/yyyy
+    const formattedCheckInDate = new Date(bookingDetails.checkInDate).toLocaleDateString('en-GB');
+    const formattedCheckOutDate = new Date(bookingDetails.checkOutDate).toLocaleDateString('en-GB');
+
     const mailOptions = {
         from: process.env.EMAIL_USER,
         to: recipientEmail,
@@ -44,16 +49,18 @@ const sendPaymentEmail = async (recipientEmail, bookingDetails) => {
             <h3>Thank you for your payment!</h3>
             <p>Your booking details:</p>
             <ul>
-                <li><strong>Booking ID:</strong> ${bookingDetails.booking_id}</li>
+                <li><strong>Booking Room ID:</strong> ${bookingDetails.booking_id}</li>
                 <li><strong>Room:</strong> ${bookingDetails.roomName}</li>
-                <li><strong>Check-in Date:</strong> ${bookingDetails.checkInDate}</li>
-                <li><strong>Check-out Date:</strong> ${bookingDetails.checkOutDate}</li>
+                <li><strong>Check-in Date:</strong> ${formattedCheckInDate}</li>
+                <li><strong>Check-out Date:</strong> ${formattedCheckOutDate}</li>
                 <li><strong>Total Amount Paid:</strong> ${bookingDetails.amountPaid}</li>
             </ul>
         `
     };
+
     await transporter.sendMail(mailOptions);
 };
+
 
 const createPayment = async (req, res) => {
     try {

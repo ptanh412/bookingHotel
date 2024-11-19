@@ -19,4 +19,5 @@ export const ROUTER = {
     DETAILBOOKING: '/detailBooking',
     ROOMMANAGE: '/roomManage',
     SERVICEMANAGE: '/serviceManage',
+    ROOMEDIT: '/roomEdit',
 }

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 const Rooms = () => {
   const [rooms, setRooms] = useState([]);
@@ -53,7 +54,7 @@ const Rooms = () => {
                   <img src={room.image} alt={room.name} className="w-20 h-20 object-cover rounded-lg" />
                 </td>
                 <td className="border p-2">
-                  <button className="bg-green-500 text-white px-2 py-1 rounded-lg mr-7 font-semibold" >Edit</button>
+                  <Link to={`/admin-home/roomEdit/${room.id}`} className="bg-green-500 text-white px-2 py-1 rounded-lg mr-7 font-semibold" >Edit</Link>
                   <button className="bg-red-500 text-white p-1 rounded-lg font-semibold">Delete</button>
                 </td>
               </tr>

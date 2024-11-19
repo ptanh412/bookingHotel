@@ -57,4 +57,16 @@ const getRoomById = async (req, res) => {
     res.status(500).json({ message: 'Error fetching data', error: error.message });
   }
 }
-module.exports = { getRooms, getRoomById };
+const getIdRoom = async (req, res) => {
+  try {
+    const result = await sql.query(`SELECT * FROM rooms WHERE id = ${req.params.id}`);
+    if (result.recordset.length === 0) {
+      return res.status(404).json({ message: 'Room not found' });
+    }
+    res.json(result.recordset[0]);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    res.status(500).json({ message: 'Error fetching data', error: error.message });
+  }
+}
+module.exports = { getRooms, getRoomById, getIdRoom };
